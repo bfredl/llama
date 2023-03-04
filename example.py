@@ -20,7 +20,7 @@ def setup_model_parallel() -> Tuple[int, int]:
     local_rank = int(os.environ.get("LOCAL_RANK", -1))
     world_size = int(os.environ.get("WORLD_SIZE", -1))
 
-    torch.distributed.init_process_group("nccl")
+    torch.distributed.init_process_group("gloo")
     initialize_model_parallel(world_size)
     # torch.cuda.set_device(local_rank)
 
@@ -106,13 +106,14 @@ plush girafe => girafe peluche
 
 cheese =>""",
     ]
-    results = generator.generate(
-        prompts, max_gen_len=256, temperature=temperature, top_p=top_p
-    )
+    for gen in [2,10,20]:
+        results = generator.generate(
+            ["jag glum vad som hende"], max_gen_len=gen, temperature=temperature, top_p=top_p
+        )
 
-    for result in results:
-        print(result)
-        print("\n==================================\n")
+        for result in results:
+            print(result)
+            print("\n==================================\n")
 
 
 if __name__ == "__main__":
